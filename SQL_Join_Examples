@@ -1,0 +1,56 @@
+This SQL query identifies the top 10 countries by customer count. Using **INNER JOIN** clauses, it connects the customer, address, city, and country tables. It then counts and orders customers by country, displaying the top 10 with their respective counts.
+
+
+SELECT 
+	D.country
+	COUNT(A.customer_id) AS customer_count
+FROM 
+	customer A
+INNER JOIN 
+	address B ON A.address_id = B.address_id
+INNER JOIN
+	city C ON B.city_id = C.city_id
+INNER JOIN
+	country D ON C.country_id = D.country_id
+GROUP BY
+	D.country
+ORDER BY
+	customer_count DESC
+LIMIT 10;
+
+This SQL query retrieves the top 10 cities within the 10 countries with the most customers. It uses a subquery with **INNER JOIN** clauses to first identify those countries, then selects the top 10 cities located in those countries based on customer count. The final output displays each city and its corresponding customer count.
+
+SELECT 
+    C.city,
+    COUNT(A.customer_id) AS customer_count
+FROM 
+    customer A
+INNER JOIN 
+    address B ON A.address_id = B.address_id
+INNER JOIN
+    city C ON B.city_id = C.city_id
+INNER JOIN
+    country D ON C.country_id = D.country_id
+WHERE
+    D.country IN (
+        SELECT 
+            D.country
+        FROM 
+            customer A
+        INNER JOIN 
+            address B ON A.address_id = B.address_id
+        INNER JOIN
+            city C ON B.city_id = C.city_id
+        INNER JOIN
+            country D ON C.country_id = D.country_id
+        GROUP BY
+            D.country
+        ORDER BY
+            COUNT(A.customer_id) DESC
+        LIMIT 10
+    )
+GROUP BY
+    C.city
+ORDER BY
+    customer_count DESC
+LIMIT 10;
