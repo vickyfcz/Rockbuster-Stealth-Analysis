@@ -1,0 +1,38 @@
+To find the average spending of the top 5 customers, this SQL query uses CTEs to first identify the highest-spending customers, then calculates their average payment amount.
+
+-- CTE to identify the top 10 countries by the number of customers
+WITH TopCountries AS (
+    SELECT D.country
+    FROM customer A
+    INNER JOIN address B ON A.address_id = B.address_id
+    INNER JOIN city C ON B.city_id = C.city_id
+    INNER JOIN country D ON C.country_id = D.country_id
+    GROUP BY D.country
+    ORDER BY COUNT(A.customer_id) DESC
+    LIMIT 10
+),
+
+CitiesInTopCountries AS (
+    SELECT C.city
+    FROM customer A
+    INNER JOIN address B ON A.address_id = B.address_id
+    INNER JOIN city C ON B.city_id = C.city_id
+    INNER JOIN country D ON C.country_id = D.country_id
+    WHERE D.country IN (SELECT country FROM TopCountries)
+    GROUP BY D.country, C.city
+),
+
+TotalPayments AS (
+    SELECT A.customer_id, SUM(E.amount) AS total_amount_paid
+    FROM customer A
+    INNER JOIN address B ON A.address_id = B.address_id
+    INNER JOIN city C ON B.city_id = C.city_id
+    INNER JOIN country D ON C.country_id = D.country_id
+    INNER JOIN payment E ON A.customer_id = E.customer_id
+    WHERE C.city IN (SELECT city FROM CitiesInTopCountries)
+    GROUP BY A.customer_id
+)
+
+SELECT AVG(total_amount_paid) AS average
+FROM TotalPayments;
+
