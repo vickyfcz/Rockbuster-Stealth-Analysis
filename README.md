@@ -13,5 +13,5 @@ This project analyses Rockbuster Stealth LLC's historical data using SQL to guid
 *Tableau Public:* Platform for creating and sharing interactive data visualisations.
 ## Visualisations and Presentation
 - for visualisations of the project please refer to [Tableau](https://public.tableau.com/app/profile/vicky.czada/viz/RockbusterTotalSales/TotalSalesandCustomersforIndividualCountries)
-- for tables created from information created using SQL please refer to the excel spreadsheet in the files 
+- for tables created from information SQL please refer to the excel spreadsheet in the files 
 - for full presentation please refer to the powerpoint in the files
